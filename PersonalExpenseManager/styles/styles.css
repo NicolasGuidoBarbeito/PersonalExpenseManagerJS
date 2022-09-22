@@ -1,0 +1,19 @@
+.contenedor {
+    display: grid;
+    max-width: 75%;
+    text-align: center;
+    margin: 2rem auto;
+    background-color: rgb(179, 179, 179);
+    border-radius: 5%;
+    border-color: black;
+    justify-content: space-evenly;
+}
+
+.add-button{
+    text-align: left;
+}
+
+
+h1 {
+    text-align: center;
+}
