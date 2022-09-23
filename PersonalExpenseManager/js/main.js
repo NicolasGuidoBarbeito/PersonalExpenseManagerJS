@@ -32,11 +32,24 @@ function ingresarIngreso(botonID){
     let ingresoValue = ingresoAGuardar.value
 
         if (isNaN(ingresoValue) === true || ingresoValue == null || ingresoValue === "") { /*EVALUA SI LO INGRESADO ES UN NUMERO */
-            alert("Debe ingresar información válida. Debe ingresar un número!")
+            Swal.fire({
+                title: 'Error!',
+                text: 'Debe ingresar información válida. Debe ingresar un número!',
+                icon: 'error',
+                confimButtonText: 'OK'
+            })
             return
         }
 
-    ingresoValue <= 0 && alert("El número ingresado debe ser un número positivo (mayor a 0)");
+    if(ingresoValue <= 0) {
+        Swal.fire({
+            title: 'Error!',
+            text: 'El número ingresado debe ser un número positivo (mayor a 0)',
+            icon: 'error',
+            confimButtonText: 'OK'
+        })
+        return
+    }
 
     ingreso = new Ingreso(ingresoValue);
 
@@ -91,13 +104,24 @@ function ingresarEgreso(botonID){
     let egresoValue = egresoAGuardar.value 
 
         if( isNaN(egresoValue) === true || egresoValue == null || egresoValue === "") { /*EVALUA SI LO INGRESADO ES UN NUMERO */
-            alert("Debe ingresar información válida. Debe ingresar un número!")
+            Swal.fire({
+                title: 'Error!',
+                text: 'Debe ingresar información válida. Debe ingresar un número!',
+                icon: 'error',
+                confimButtonText: 'OK'
+            })
             return
         }
-    
-        egresoValue <= 0 && alert("El número ingresado debe ser un número positivo (mayor a 0)");
 
-        //faltaria sacar el egreso que actualizas
+    if (egresoValue <= 0) {
+        Swal.fire({
+            title: 'Error!',
+            text: 'El número ingresado debe ser un número positivo (mayor a 0)',
+            icon: 'error',
+            confimButtonText: 'OK'
+        })
+        return
+    }
 
         egreso = new Egreso(egresoValue);
 
