@@ -36,7 +36,7 @@ function ingresarIngreso(botonID){
                 title: 'Error!',
                 text: 'Debe ingresar información válida. Debe ingresar un número!',
                 icon: 'error',
-                confimButtonText: 'OK'
+                confirmButtonText: 'OK'
             })
             return
         }
@@ -46,7 +46,7 @@ function ingresarIngreso(botonID){
             title: 'Error!',
             text: 'El número ingresado debe ser un número positivo (mayor a 0)',
             icon: 'error',
-            confimButtonText: 'OK'
+            confirmButtonText: 'OK'
         })
         return
     }
@@ -60,6 +60,11 @@ function ingresarIngreso(botonID){
     let saveButton = document.getElementById(botonID);
 
     saveButton.remove(); //Borro el boton save de la pantalla
+
+    Toastify({
+        text: "Ingreso agregado correctamente!",
+        duration: 3000
+    }).showToast();
 }
 
 
@@ -132,6 +137,11 @@ function ingresarEgreso(botonID){
     let saveButton = document.getElementById(botonID);
 
     saveButton.remove(); //Borro el boton save de la pantalla
+
+    Toastify({
+        text: "Egreso agregado correctamente!",
+        duration: 3000
+    }).showToast();
 }
 
 function agregarEgreso(egreso){
