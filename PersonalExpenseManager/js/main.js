@@ -14,8 +14,6 @@ class Egreso{
 var ingresos = [];
 var egresos = [];
 
-localStorage.setItem('ingresos', ingresos);
-localStorage.setItem('egresos', egresos);
 
 var contadorIngresos = 0;
 var contadorEgresos = 0;
@@ -31,25 +29,24 @@ function ingresarIngreso(botonID){
     let ingresoAGuardar = document.getElementById(idIngreso);
 
 
-    let ingresoValue = ingresoAGuardar.value 
+    let ingresoValue = ingresoAGuardar.value
 
-        if( isNaN(ingresoValue) == true || ingresoValue == null || ingresoValue == "") { /*EVALUA SI LO INGRESADO ES UN NUMERO */
+        if (isNaN(ingresoValue) === true || ingresoValue == null || ingresoValue === "") { /*EVALUA SI LO INGRESADO ES UN NUMERO */
             alert("Debe ingresar información válida. Debe ingresar un número!")
             return
         }
-    
-        if(ingresoValue <= 0) {
-            ingresoValue = alert("El número ingresado debe ser un número positivo (mayor a 0)");
-            return
-        }
 
-        //faltaria sacar el ingreso que actualizas
+    ingresoValue <= 0 && alert("El número ingresado debe ser un número positivo (mayor a 0)");
 
-        ingreso = new Ingreso(ingresoValue);
+    ingreso = new Ingreso(ingresoValue);
 
-        ingresos.push(ingreso);
+    ingresos.push(ingreso);
 
-        localStorage.setItem(ingreso, JSON.stringify(ingreso));
+    localStorage.setItem("ingresos", JSON.stringify(ingresos));
+
+    let saveButton = document.getElementById(botonID);
+
+    saveButton.remove(); //Borro el boton save de la pantalla
 }
 
 
@@ -93,23 +90,25 @@ function ingresarEgreso(botonID){
 
     let egresoValue = egresoAGuardar.value 
 
-        if( isNaN(egresoValue) == true || egresoValue == null || egresoValue == "") { /*EVALUA SI LO INGRESADO ES UN NUMERO */
+        if( isNaN(egresoValue) === true || egresoValue == null || egresoValue === "") { /*EVALUA SI LO INGRESADO ES UN NUMERO */
             alert("Debe ingresar información válida. Debe ingresar un número!")
             return
         }
     
-        if(egresoValue <= 0) {
-            egresoValue = alert("El número ingresado debe ser un número positivo (mayor a 0)");
-            return
-        }
+        egresoValue <= 0 && alert("El número ingresado debe ser un número positivo (mayor a 0)");
 
         //faltaria sacar el egreso que actualizas
 
         egreso = new Egreso(egresoValue);
 
         egresos.push(egreso);
-}
 
+        localStorage.setItem("egresos", JSON.stringify(egresos));
+
+    let saveButton = document.getElementById(botonID);
+
+    saveButton.remove(); //Borro el boton save de la pantalla
+}
 
 function agregarEgreso(egreso){
 
@@ -128,40 +127,40 @@ function agregarEgreso(egreso){
 
     divEgresos.appendChild(nuevoEgresoHTML);
 
-    let botonIngresarEgreso = document.getElementsById(`save-button_` + `${contadorEgresos}`);
-        
-    botonIngresarEgreso.addEventListener("click", (e) =>  {
+    let botonIngresarEgreso = document.getElementsByClassName("save-button-egreso");
+    for (boton of botonIngresarEgreso) {
+        boton.addEventListener("click", (e) =>  {
             let elementId = e.target.id;
             ingresarEgreso(elementId);
         });
-}
-
-
-function sumarIngresos(valorA, valorB){
-    return valorA.ingreso + valorB.ingreso;
-}
-
-function sumarEgresos(valorA, valorB){
-    return valorA.egreso + valorB.egreso;
+    }
 }
 
 function sumarOperaciones(){
     let sumaIngresos = 0;
     let sumaEgresos = 0;
-    let balance = 0;
+    let balance;
+    let ingresosGuardadosComoClase = [new Ingreso(0)];
+    let egresosGuardadosComoClase = [new Egreso(0)];
 
+    ingresosGuardados = JSON.parse(localStorage.getItem("ingresos"));
 
-    let montoIngresosIngresados = document.getElementsByClassName("new-ingreso");
+    egresosGuardados = JSON.parse(localStorage.getItem("egresos"));
 
-    let montoEgresosIngresados = document.getElementsByClassName("new-egreso");
-
-    for(montoIngreso of montoIngresosIngresados){
-        sumaIngresos += parseFloat(montoIngreso.value)
+    for (ingresoGuardado of ingresosGuardados){
+        ingresosGuardadosComoClase.push(new Ingreso(ingresoGuardado.ingreso));
     }
 
-    
-    for(montoEgreso of montoEgresosIngresados){
-        sumaEgresos -= parseFloat(montoEgreso.value)
+    for (egresoGuardado of egresosGuardados){
+        egresosGuardadosComoClase.push(new Egreso(egresoGuardado.egreso));
+    }
+
+    for(ingresoASumar of ingresosGuardadosComoClase){
+        sumaIngresos += parseFloat(ingresoASumar.ingreso);
+    }
+
+    for(egresoASumar of egresosGuardadosComoClase){
+        sumaEgresos -= parseFloat(egresoASumar.egreso);
     }
 
     balance = sumaIngresos + sumaEgresos;
@@ -172,9 +171,7 @@ function sumarOperaciones(){
     var divBalanceResult = document.getElementById('balance_result');
 
 
-    if(divBalanceResult !== null){
-        divBalanceResult.remove();
-    }
+    divBalanceResult !== null && divBalanceResult.remove();
 
     let balanceHTML = document.createElement("div");
 
@@ -192,7 +189,7 @@ function sumarOperaciones(){
 
     balanceHTML.innerHTML = `<h1 style="color:${colorBalance};"> $ ${balance}</h1>`
 
-    if(isNaN(balance) == true){
+    if(isNaN(balance) === true){
         balanceHTML.innerHTML = `<h1 style="color:blue"> No se puede calcular el balance debido a que hay información errónea. Corregir!</h1>`
     }
 
@@ -209,3 +206,21 @@ botonAgregarEgreso.addEventListener("click", () => agregarEgreso(new Egreso(0)))
 let botonCalcularBalance = document.getElementById("calcularBalance");
 botonCalcularBalance.addEventListener("click", sumarOperaciones);
 
+/*
+function showIngresosAndEgresos(){
+
+    ingresosGuardados = JSON.parse(localStorage.getItem("ingresos"));
+
+    egresosGuardados = JSON.parse(localStorage.getItem("egresos"));
+
+    for (ingresoGuardado of ingresosGuardados){
+        agregarIngreso(ingresoGuardado);
+    }
+
+    for (egresoGuardado of egresosGuardados){
+        agregarEgreso(egresoGuardado);
+    }
+}
+
+window.onload = showIngresosAndEgresos;
+*/
