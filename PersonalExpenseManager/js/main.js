@@ -28,7 +28,6 @@ function ingresarIngreso(botonID){
 
     let ingresoAGuardar = document.getElementById(idIngreso);
 
-
     let ingresoValue = ingresoAGuardar.value
 
         if (isNaN(ingresoValue) === true || ingresoValue == null || ingresoValue === "") { /*EVALUA SI LO INGRESADO ES UN NUMERO */
@@ -55,8 +54,6 @@ function ingresarIngreso(botonID){
 
     ingresos.push(ingreso);
 
-    localStorage.setItem("ingresos", JSON.stringify(ingresos));
-
     let saveButton = document.getElementById(botonID);
 
     saveButton.remove(); //Borro el boton save de la pantalla
@@ -65,12 +62,28 @@ function ingresarIngreso(botonID){
         text: "Ingreso agregado correctamente!",
         duration: 3000
     }).showToast();
+
+    sumarOperaciones();
 }
 
 
 function agregarIngreso(ingreso){
 
     var divIngresos = document.getElementById('contenedor-ingresos');
+
+    let ingresosAgregados = document.getElementsByClassName("new-ingreso");
+
+    if (ingresosAgregados.length !== 0){
+        let ultimoIngreso = ingresosAgregados[ingresosAgregados.length-1];
+        if(ultimoIngreso.value === '0'){
+            Toastify({
+                text: "Ya tiene un ingreso disponible para agregar!",
+                duration: 3000
+            }).showToast();
+            return
+        }
+    }
+
 
     nuevoIngresoHTML = document.createElement('div');
 
@@ -80,18 +93,16 @@ function agregarIngreso(ingreso){
 
     nuevoIngresoHTML.innerHTML = `
         <input type="text" id="new-ingreso_` + `${contadorIngresos}` + `"  class="new-ingreso"  value ="`+`${ingreso.ingreso}">
-        <input type="submit" id="save-button_` + `${contadorIngresos}` + `" value="Save" class="save-button-ingreso">
+        <input type="submit" id="save-button_ingreso_` + `${contadorIngresos}` + `" value="Save" class="save-button-ingreso">
     `;
 
     divIngresos.appendChild(nuevoIngresoHTML);
 
-    let botonIngresarIngreso = document.getElementsByClassName("save-button-ingreso");
-    for (boton of botonIngresarIngreso) {
-        boton.addEventListener("click", (e) =>  {
+    let botonIngresarIngreso = document.getElementById("save-button_ingreso_" + `${contadorIngresos}`);
+    botonIngresarIngreso.addEventListener("click", (e) =>  {
             let elementId = e.target.id;
             ingresarIngreso(elementId);
         });
-    }
 }
 
 
@@ -132,8 +143,6 @@ function ingresarEgreso(botonID){
 
         egresos.push(egreso);
 
-        localStorage.setItem("egresos", JSON.stringify(egresos));
-
     let saveButton = document.getElementById(botonID);
 
     saveButton.remove(); //Borro el boton save de la pantalla
@@ -142,11 +151,27 @@ function ingresarEgreso(botonID){
         text: "Egreso agregado correctamente!",
         duration: 3000
     }).showToast();
+
+    sumarOperaciones();
 }
 
 function agregarEgreso(egreso){
 
     var divEgresos = document.getElementById('contenedor-egresos');
+
+
+    let egresosAgregados = document.getElementsByClassName("new-egreso");
+
+    if (egresosAgregados.length !== 0){
+        let ultimoEgreso = egresosAgregados[egresosAgregados.length-1];
+        if(ultimoEgreso.value === '0'){
+            Toastify({
+                text: "Ya tiene un egreso disponible para agregar!",
+                duration: 3000
+            }).showToast();
+            return
+        }
+    }
 
     nuevoEgresoHTML = document.createElement('div');
 
@@ -156,44 +181,28 @@ function agregarEgreso(egreso){
 
     nuevoEgresoHTML.innerHTML = `
         <input type="text" id="new-egreso_` + `${contadorEgresos}` + `"  class="new-egreso"  value ="`+`${egreso.egreso}">
-        <input type="submit" id="save-button_` + `${contadorEgresos}` + `" value="Save" class="save-button-egreso">
+        <input type="submit" id="save-button_egreso_` + `${contadorEgresos}` + `" value="Save" class="save-button-egreso">
     `;
 
     divEgresos.appendChild(nuevoEgresoHTML);
 
-    let botonIngresarEgreso = document.getElementsByClassName("save-button-egreso");
-    for (boton of botonIngresarEgreso) {
-        boton.addEventListener("click", (e) =>  {
-            let elementId = e.target.id;
-            ingresarEgreso(elementId);
-        });
-    }
+    let botonIngresarEgreso = document.getElementById("save-button_egreso_" + `${contadorEgresos}`);
+    botonIngresarEgreso.addEventListener("click", (e) =>  {
+        let elementId = e.target.id;
+        ingresarEgreso(elementId);
+    });
 }
 
 function sumarOperaciones(){
     let sumaIngresos = 0;
     let sumaEgresos = 0;
     let balance;
-    let ingresosGuardadosComoClase = [new Ingreso(0)];
-    let egresosGuardadosComoClase = [new Egreso(0)];
 
-    ingresosGuardados = JSON.parse(localStorage.getItem("ingresos"));
-
-    egresosGuardados = JSON.parse(localStorage.getItem("egresos"));
-
-    for (ingresoGuardado of ingresosGuardados){
-        ingresosGuardadosComoClase.push(new Ingreso(ingresoGuardado.ingreso));
-    }
-
-    for (egresoGuardado of egresosGuardados){
-        egresosGuardadosComoClase.push(new Egreso(egresoGuardado.egreso));
-    }
-
-    for(ingresoASumar of ingresosGuardadosComoClase){
+    for(ingresoASumar of ingresos){
         sumaIngresos += parseFloat(ingresoASumar.ingreso);
     }
 
-    for(egresoASumar of egresosGuardadosComoClase){
+    for(egresoASumar of egresos){
         sumaEgresos -= parseFloat(egresoASumar.egreso);
     }
 
@@ -237,24 +246,18 @@ botonAgregarIngreso.addEventListener("click", () => agregarIngreso(new Ingreso(0
 let botonAgregarEgreso = document.getElementById("agregarEgreso");
 botonAgregarEgreso.addEventListener("click", () => agregarEgreso(new Egreso(0)));
 
-let botonCalcularBalance = document.getElementById("calcularBalance");
-botonCalcularBalance.addEventListener("click", sumarOperaciones);
+fetch ('./egresos.json').then( (res) => res.json())
+    .then( dataJson => {
 
-/*
-function showIngresosAndEgresos(){
+        dataJson.forEach( egresoJson => {
+        agregarEgreso(new Egreso(egresoJson.egreso))
+        })
+    })
 
-    ingresosGuardados = JSON.parse(localStorage.getItem("ingresos"));
+fetch ('./ingresos.json').then( (res) => res.json())
+    .then( dataJson => {
 
-    egresosGuardados = JSON.parse(localStorage.getItem("egresos"));
-
-    for (ingresoGuardado of ingresosGuardados){
-        agregarIngreso(ingresoGuardado);
-    }
-
-    for (egresoGuardado of egresosGuardados){
-        agregarEgreso(egresoGuardado);
-    }
-}
-
-window.onload = showIngresosAndEgresos;
-*/
+        dataJson.forEach( ingresoJson => {
+            agregarIngreso(new Ingreso(ingresoJson.ingreso))
+        })
+    })
