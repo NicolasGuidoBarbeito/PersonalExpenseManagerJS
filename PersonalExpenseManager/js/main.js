@@ -20,11 +20,96 @@ var egresos = [];
 var contadorIngresos = 0;
 var contadorEgresos = 0;
 
+const guardarIngreso = function (e) {
+    let elementId = e.target.id;
+    ingresarIngreso(elementId);
+};
+
+const guardarEgreso = function (e) {
+    let elementId = e.target.id;
+    ingresarEgreso(elementId);
+};
+
+
+function borrarIngreso(deleteButtonID) {
+
+    let idNumber = deleteButtonID.split("_").pop();
+
+    let deleteButtonElement = document.getElementById(deleteButtonID);
+
+    let fechaIngresoID = 'new-ingreso-date_' + idNumber;
+
+    let descripcionIngresoID = 'new-ingreso-desc_' + idNumber;
+
+    let valorIngresoID = 'new-ingreso_' + idNumber;
+
+    let fechaIngresoElement = document.getElementById(fechaIngresoID);
+
+    let descripcionIngresoElement = document.getElementById(descripcionIngresoID);
+
+    let valorIngresoElement = document.getElementById(valorIngresoID);
+
+    for(let i = 0; i < ingresos.length; i++){
+        if(ingresos[i].fecha == fechaIngresoElement.value && ingresos[i].descripcion == descripcionIngresoElement.value && ingresos[i].valor == valorIngresoElement.value){
+            ingresos.splice(i,1);
+        }
+    }
+
+    fechaIngresoElement.remove();
+
+    descripcionIngresoElement.remove();
+
+    valorIngresoElement.remove();
+
+    deleteButtonElement.remove();
+
+    sumarOperaciones();
+}
+
+
+function borrarEgreso(deleteButtonID) {
+
+    let idNumber = deleteButtonID.split("_").pop();
+
+    let deleteButtonElement = document.getElementById(deleteButtonID);
+
+    let fechaEgresoID = 'new-egreso-date_' + idNumber;
+
+    let descripcionEgresoID = 'new-egreso-desc_' + idNumber;
+
+    let valorEgresoID = 'new-egreso_' + idNumber;
+
+    let fechaEgresoElement = document.getElementById(fechaEgresoID);
+
+    let descripcionEgresoElement = document.getElementById(descripcionEgresoID);
+
+    let valorEgresoElement = document.getElementById(valorEgresoID);
+
+    for(let i = 0; i < egresos.length; i++){
+        if(egresos[i].fecha == fechaEgresoElement.value && egresos[i].descripcion == descripcionEgresoElement.value && egresos[i].valor == valorEgresoElement.value){
+            egresos.splice(i,1);
+        }
+    }
+
+    fechaEgresoElement.remove();
+
+    descripcionEgresoElement.remove();
+
+    valorEgresoElement.remove();
+
+    deleteButtonElement.remove();
+
+    sumarOperaciones();
+}
+
+
 function ingresarIngreso(botonID) {
 
     let ingreso;
 
     let saveButtonID = botonID.split("_").pop();
+
+    let deleteButtonID = 'delete-button-ingreso_' + saveButtonID;
 
     let fechaIngresoID = 'new-ingreso-date_' + saveButtonID;
 
@@ -86,7 +171,15 @@ function ingresarIngreso(botonID) {
 
     let saveButton = document.getElementById(botonID);
 
-    saveButton.remove(); //Borro el boton save de la pantalla
+    saveButton.id = deleteButtonID; //Hago que el botón ahora sea un botón de delete!
+
+    saveButton.className = "delete-button-ingreso";
+
+    saveButton.value = "Borrar";
+
+    saveButton.removeEventListener("click", guardarIngreso);
+
+    saveButton.addEventListener("click", () => borrarIngreso(deleteButtonID));
 
     Toastify({
         text: "Ingreso agregado correctamente!",
@@ -124,16 +217,13 @@ function agregarIngreso(ingreso){
         <input type="date" id="new-ingreso-date_` + `${contadorIngresos}` + `"  class="new-ingreso-date"  value ="`+`${ingreso.fecha}">
         <input type="text" id="new-ingreso-desc_` + `${contadorIngresos}` + `"  class="new-ingreso-descripcion"  value ="`+`${ingreso.descripcion}">
         <input type="number" id="new-ingreso_` + `${contadorIngresos}` + `"  class="new-ingreso-valor"  value ="`+`${ingreso.valor}">
-        <input type="submit" id="save-button-ingreso_` + `${contadorIngresos}` + `" value="Save" class="save-button-ingreso">
+        <input type="submit" id="save-button-ingreso_` + `${contadorIngresos}` + `" value="Guardar" class="save-button-ingreso">
     `;
 
     divIngresos.appendChild(nuevoIngresoHTML);
 
     let botonIngresarIngreso = document.getElementById("save-button-ingreso_" + `${contadorIngresos}`);
-    botonIngresarIngreso.addEventListener("click", (e) =>  {
-            let elementId = e.target.id;
-            ingresarIngreso(elementId);
-        });
+    botonIngresarIngreso.addEventListener("click", guardarIngreso);
 }
 
 function ingresarEgreso(botonID){
@@ -141,6 +231,8 @@ function ingresarEgreso(botonID){
     let egreso;
     
     let saveButtonID = botonID.split("_").pop();
+
+    let deleteButtonID = 'delete-button-egreso_' + saveButtonID;
 
     let fechaEgresoID = 'new-egreso-date_' + saveButtonID;
 
@@ -201,7 +293,15 @@ function ingresarEgreso(botonID){
 
     let saveButton = document.getElementById(botonID);
 
-    saveButton.remove(); //Borro el boton save de la pantalla
+    saveButton.id = deleteButtonID; //Hago que el botón ahora sea un botón de delete!
+
+    saveButton.className = "delete-button-egreso";
+
+    saveButton.value = "Borrar";
+
+    saveButton.removeEventListener("click", guardarEgreso);
+
+    saveButton.addEventListener("click", () => borrarEgreso(deleteButtonID));
 
     Toastify({
         text: "Egreso agregado correctamente!",
@@ -239,16 +339,13 @@ function agregarEgreso(egreso){
         <input type="date" id="new-egreso-date_` + `${contadorEgresos}` + `"  class="new-egreso-date"  value ="`+`${egreso.fecha}">
         <input type="text" id="new-egreso-desc_` + `${contadorEgresos}` + `"  class="new-egreso-descripcion"  value ="`+`${egreso.descripcion}">
         <input type="number" id="new-egreso_` + `${contadorEgresos}` + `"  class="new-egreso-valor"  value ="`+`${egreso.valor}">
-        <input type="submit" id="save-button-egreso_` + `${contadorEgresos}` + `" value="Save" class="save-button-egreso">
+        <input type="submit" id="save-button-egreso_` + `${contadorEgresos}` + `" value="Guardar" class="save-button-egreso">
     `;
 
     divEgresos.appendChild(nuevoEgresoHTML);
 
     let botonIngresarEgreso = document.getElementById("save-button-egreso_" + `${contadorEgresos}`);
-    botonIngresarEgreso.addEventListener("click", (e) =>  {
-        let elementId = e.target.id;
-        ingresarEgreso(elementId);
-    });
+    botonIngresarEgreso.addEventListener("click", guardarEgreso);
 }
 
 function sumarOperaciones(){
