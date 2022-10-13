@@ -26,3 +26,12 @@ h1 {
 .new-ingreso-descripcion{
     width: 45%;
 }
+
+.new-egreso-valor {
+    text-align: center;
+    max-width: 15%;
+}
+
+.new-egreso-descripcion{
+    width: 45%;
+}

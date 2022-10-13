@@ -1,6 +1,4 @@
 [
-{"valor": 200},
-{"valor": 400},
-{"valor": 500},
-{"valor": 700}
+  { "fecha": "2022-03-21", "descripcion" : "Farmacia - Gotas para los ojos", "valor": 300 },
+  { "fecha": "2022-02-22", "descripcion" : "Supermercado Coto", "valor": 1000 }
 ]

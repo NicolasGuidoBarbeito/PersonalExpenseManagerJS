@@ -7,7 +7,9 @@ class Ingreso{
 }
 
 class Egreso{
-    constructor(valor) {
+    constructor(fecha, descripcion, valor) {
+        this.fecha = fecha;
+        this.descripcion = descripcion;
         this.valor = parseFloat(valor);
     }
 }
@@ -118,14 +120,20 @@ function ingresarEgreso(botonID){
     
     let saveButtonID = botonID.split("_").pop();
 
-    let idEgreso = 'new-egreso_' + saveButtonID;
+    let fechaEgresoID = 'new-egreso-date_' + saveButtonID;
 
-    let egresoAGuardar = document.getElementById(idEgreso);
+    let fechaEgresoAGuardar = document.getElementById(fechaEgresoID).value;
+
+    let descripcionEgresoID = 'new-egreso-desc_' + saveButtonID;
+
+    let descripcionEgresoAGuardar = document.getElementById(descripcionEgresoID).value;
+
+    let valorEgresoID = 'new-egreso_' + saveButtonID;
+
+    let valorEgresoAGuardar = document.getElementById(valorEgresoID).value;
 
 
-    let egresoValue = egresoAGuardar.value 
-
-        if( isNaN(egresoValue) === true || egresoValue == null || egresoValue === "") { /*EVALUA SI LO INGRESADO ES UN NUMERO */
+        if( isNaN(valorEgresoAGuardar) === true || valorEgresoAGuardar == null || valorEgresoAGuardar === "") { /*EVALUA SI LO INGRESADO ES UN NUMERO */
             Swal.fire({
                 title: 'Error!',
                 text: 'Debe ingresar información válida. Debe ingresar un número!',
@@ -135,7 +143,7 @@ function ingresarEgreso(botonID){
             return
         }
 
-    if (egresoValue <= 0) {
+    if (valorEgresoAGuardar <= 0) {
         Swal.fire({
             title: 'Error!',
             text: 'El número ingresado debe ser un número positivo (mayor a 0)',
@@ -145,7 +153,7 @@ function ingresarEgreso(botonID){
         return
     }
 
-        egreso = new Egreso(egresoValue);
+        egreso = new Egreso(fechaEgresoAGuardar, descripcionEgresoAGuardar, valorEgresoAGuardar);
 
         egresos.push(egreso);
 
@@ -166,7 +174,7 @@ function agregarEgreso(egreso){
     var divEgresos = document.getElementById('contenedor-egresos');
 
 
-    let egresosAgregados = document.getElementsByClassName("new-egreso");
+    let egresosAgregados = document.getElementsByClassName("new-egreso-valor");
 
     if (egresosAgregados.length !== 0){
         let ultimoEgreso = egresosAgregados[egresosAgregados.length-1];
@@ -186,7 +194,9 @@ function agregarEgreso(egreso){
     contadorEgresos += 1;
 
     nuevoEgresoHTML.innerHTML = `
-        <input type="text" id="new-egreso_` + `${contadorEgresos}` + `"  class="new-egreso"  value ="`+`${egreso.valor}">
+        <input type="date" id="new-egreso-date_` + `${contadorEgresos}` + `"  class="new-egreso-date"  value ="`+`${egreso.fecha}">
+        <input type="text" id="new-egreso-desc_` + `${contadorEgresos}` + `"  class="new-egreso-descripcion"  value ="`+`${egreso.descripcion}">
+        <input type="number" id="new-egreso_` + `${contadorEgresos}` + `"  class="new-egreso-valor"  value ="`+`${egreso.valor}">
         <input type="submit" id="save-button-egreso_` + `${contadorEgresos}` + `" value="Save" class="save-button-egreso">
     `;
 
@@ -247,16 +257,16 @@ function sumarOperaciones(){
 }
 
 let botonAgregarIngreso = document.getElementById("agregarIngreso");
-botonAgregarIngreso.addEventListener("click", () => agregarIngreso(new Ingreso("1990-01-01","",0)));
+botonAgregarIngreso.addEventListener("click", () => agregarIngreso(new Ingreso("","",0)));
 
 let botonAgregarEgreso = document.getElementById("agregarEgreso");
-botonAgregarEgreso.addEventListener("click", () => agregarEgreso(new Egreso(0)));
+botonAgregarEgreso.addEventListener("click", () => agregarEgreso(new Egreso("","",0)));
 
 fetch ('./egresos.json').then( (res) => res.json())
     .then( dataJson => {
 
         dataJson.forEach( egresoJson => {
-        agregarEgreso(new Egreso(egresoJson.valor))
+        agregarEgreso(new Egreso(egresoJson.fecha, egresoJson.descripcion,egresoJson.valor))
         })
     })
 
