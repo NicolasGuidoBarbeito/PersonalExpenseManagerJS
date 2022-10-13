@@ -9,11 +9,20 @@
     justify-content: space-evenly;
 }
 
-.add-button{
+.add_button{
     text-align: left;
 }
 
-
 h1 {
     text-align: center;
+}
+
+
+.new-ingreso-valor {
+    text-align: center;
+    max-width: 15%;
+}
+
+.new-ingreso-descripcion{
+    width: 45%;
 }

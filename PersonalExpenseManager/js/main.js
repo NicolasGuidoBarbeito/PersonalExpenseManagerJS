@@ -1,36 +1,42 @@
 class Ingreso{
-    constructor(ingreso) {
-        this.ingreso = parseFloat(ingreso);
+    constructor(fecha, descripcion, valor) {
+        this.fecha = fecha;
+        this.descripcion = descripcion;
+        this.valor = parseFloat(valor);
     }
 }
 
-
 class Egreso{
-    constructor(egreso) {
-        this.egreso = parseFloat(egreso);
+    constructor(valor) {
+        this.valor = parseFloat(valor);
     }
 }
 
 var ingresos = [];
 var egresos = [];
 
-
 var contadorIngresos = 0;
 var contadorEgresos = 0;
 
-function ingresarIngreso(botonID){
+function ingresarIngreso(botonID) {
 
     let ingreso;
-    
+
     let saveButtonID = botonID.split("_").pop();
 
-    let idIngreso = 'new-ingreso_' + saveButtonID;
+    let fechaIngresoID = 'new-ingreso-date_' + saveButtonID;
 
-    let ingresoAGuardar = document.getElementById(idIngreso);
+    let fechaIngresoAGuardar = document.getElementById(fechaIngresoID).value;
 
-    let ingresoValue = ingresoAGuardar.value
+    let descripcionIngresoID = 'new-ingreso-desc_' + saveButtonID;
 
-        if (isNaN(ingresoValue) === true || ingresoValue == null || ingresoValue === "") { /*EVALUA SI LO INGRESADO ES UN NUMERO */
+    let descripcionIngresoAGuardar = document.getElementById(descripcionIngresoID).value;
+
+    let valorIngresoID = 'new-ingreso_' + saveButtonID;
+
+    let valorIngresoAGuardar = document.getElementById(valorIngresoID).value;
+
+        if (isNaN(valorIngresoAGuardar) === true || valorIngresoAGuardar == null || valorIngresoAGuardar === "") { /*EVALUA SI LO INGRESADO ES UN NUMERO */
             Swal.fire({
                 title: 'Error!',
                 text: 'Debe ingresar información válida. Debe ingresar un número!',
@@ -40,7 +46,7 @@ function ingresarIngreso(botonID){
             return
         }
 
-    if(ingresoValue <= 0) {
+    if(valorIngresoAGuardar <= 0) {
         Swal.fire({
             title: 'Error!',
             text: 'El número ingresado debe ser un número positivo (mayor a 0)',
@@ -50,7 +56,7 @@ function ingresarIngreso(botonID){
         return
     }
 
-    ingreso = new Ingreso(ingresoValue);
+    ingreso = new Ingreso(fechaIngresoAGuardar, descripcionIngresoAGuardar, valorIngresoAGuardar);
 
     ingresos.push(ingreso);
 
@@ -71,7 +77,7 @@ function agregarIngreso(ingreso){
 
     var divIngresos = document.getElementById('contenedor-ingresos');
 
-    let ingresosAgregados = document.getElementsByClassName("new-ingreso");
+    let ingresosAgregados = document.getElementsByClassName("new-ingreso-valor");
 
     if (ingresosAgregados.length !== 0){
         let ultimoIngreso = ingresosAgregados[ingresosAgregados.length-1];
@@ -84,27 +90,27 @@ function agregarIngreso(ingreso){
         }
     }
 
-
     nuevoIngresoHTML = document.createElement('div');
 
     nuevoIngresoHTML.class_name = 'contenedor-ingreso';
 
     contadorIngresos += 1;
 
-    nuevoIngresoHTML.innerHTML = `
-        <input type="text" id="new-ingreso_` + `${contadorIngresos}` + `"  class="new-ingreso"  value ="`+`${ingreso.ingreso}">
-        <input type="submit" id="save-button_ingreso_` + `${contadorIngresos}` + `" value="Save" class="save-button-ingreso">
+        nuevoIngresoHTML.innerHTML = `
+        <input type="date" id="new-ingreso-date_` + `${contadorIngresos}` + `"  class="new-ingreso-date"  value ="`+`${ingreso.fecha}">
+        <input type="text" id="new-ingreso-desc_` + `${contadorIngresos}` + `"  class="new-ingreso-descripcion"  value ="`+`${ingreso.descripcion}">
+        <input type="number" id="new-ingreso_` + `${contadorIngresos}` + `"  class="new-ingreso-valor"  value ="`+`${ingreso.valor}">
+        <input type="submit" id="save-button-ingreso_` + `${contadorIngresos}` + `" value="Save" class="save-button-ingreso">
     `;
 
     divIngresos.appendChild(nuevoIngresoHTML);
 
-    let botonIngresarIngreso = document.getElementById("save-button_ingreso_" + `${contadorIngresos}`);
+    let botonIngresarIngreso = document.getElementById("save-button-ingreso_" + `${contadorIngresos}`);
     botonIngresarIngreso.addEventListener("click", (e) =>  {
             let elementId = e.target.id;
             ingresarIngreso(elementId);
         });
 }
-
 
 function ingresarEgreso(botonID){
 
@@ -180,13 +186,13 @@ function agregarEgreso(egreso){
     contadorEgresos += 1;
 
     nuevoEgresoHTML.innerHTML = `
-        <input type="text" id="new-egreso_` + `${contadorEgresos}` + `"  class="new-egreso"  value ="`+`${egreso.egreso}">
-        <input type="submit" id="save-button_egreso_` + `${contadorEgresos}` + `" value="Save" class="save-button-egreso">
+        <input type="text" id="new-egreso_` + `${contadorEgresos}` + `"  class="new-egreso"  value ="`+`${egreso.valor}">
+        <input type="submit" id="save-button-egreso_` + `${contadorEgresos}` + `" value="Save" class="save-button-egreso">
     `;
 
     divEgresos.appendChild(nuevoEgresoHTML);
 
-    let botonIngresarEgreso = document.getElementById("save-button_egreso_" + `${contadorEgresos}`);
+    let botonIngresarEgreso = document.getElementById("save-button-egreso_" + `${contadorEgresos}`);
     botonIngresarEgreso.addEventListener("click", (e) =>  {
         let elementId = e.target.id;
         ingresarEgreso(elementId);
@@ -199,11 +205,11 @@ function sumarOperaciones(){
     let balance;
 
     for(ingresoASumar of ingresos){
-        sumaIngresos += parseFloat(ingresoASumar.ingreso);
+        sumaIngresos += parseFloat(ingresoASumar.valor);
     }
 
     for(egresoASumar of egresos){
-        sumaEgresos -= parseFloat(egresoASumar.egreso);
+        sumaEgresos -= parseFloat(egresoASumar.valor);
     }
 
     balance = sumaIngresos + sumaEgresos;
@@ -241,7 +247,7 @@ function sumarOperaciones(){
 }
 
 let botonAgregarIngreso = document.getElementById("agregarIngreso");
-botonAgregarIngreso.addEventListener("click", () => agregarIngreso(new Ingreso(0)));
+botonAgregarIngreso.addEventListener("click", () => agregarIngreso(new Ingreso("1990-01-01","",0)));
 
 let botonAgregarEgreso = document.getElementById("agregarEgreso");
 botonAgregarEgreso.addEventListener("click", () => agregarEgreso(new Egreso(0)));
@@ -250,7 +256,7 @@ fetch ('./egresos.json').then( (res) => res.json())
     .then( dataJson => {
 
         dataJson.forEach( egresoJson => {
-        agregarEgreso(new Egreso(egresoJson.egreso))
+        agregarEgreso(new Egreso(egresoJson.valor))
         })
     })
 
@@ -258,6 +264,6 @@ fetch ('./ingresos.json').then( (res) => res.json())
     .then( dataJson => {
 
         dataJson.forEach( ingresoJson => {
-            agregarIngreso(new Ingreso(ingresoJson.ingreso))
+            agregarIngreso(new Ingreso(ingresoJson.fecha, ingresoJson.descripcion,ingresoJson.valor))
         })
     })
