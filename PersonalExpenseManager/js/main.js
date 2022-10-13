@@ -38,6 +38,28 @@ function ingresarIngreso(botonID) {
 
     let valorIngresoAGuardar = document.getElementById(valorIngresoID).value;
 
+
+    if(fechaIngresoAGuardar === "") {
+        Swal.fire({
+            title: 'Error!',
+            text: 'Debe seleccionar una fecha',
+            icon: 'error',
+            confirmButtonText: 'OK'
+        })
+        return
+    }
+
+    if(descripcionIngresoAGuardar === "") {
+        Swal.fire({
+            title: 'Error!',
+            text: 'Debe ingresar una descripción',
+            icon: 'error',
+            confirmButtonText: 'OK'
+        })
+        return
+    }
+
+
         if (isNaN(valorIngresoAGuardar) === true || valorIngresoAGuardar == null || valorIngresoAGuardar === "") { /*EVALUA SI LO INGRESADO ES UN NUMERO */
             Swal.fire({
                 title: 'Error!',
@@ -132,16 +154,36 @@ function ingresarEgreso(botonID){
 
     let valorEgresoAGuardar = document.getElementById(valorEgresoID).value;
 
+    if(fechaEgresoAGuardar === "") {
+        Swal.fire({
+            title: 'Error!',
+            text: 'Debe seleccionar una fecha',
+            icon: 'error',
+            confirmButtonText: 'OK'
+        })
+        return
+    }
 
-        if( isNaN(valorEgresoAGuardar) === true || valorEgresoAGuardar == null || valorEgresoAGuardar === "") { /*EVALUA SI LO INGRESADO ES UN NUMERO */
-            Swal.fire({
-                title: 'Error!',
-                text: 'Debe ingresar información válida. Debe ingresar un número!',
-                icon: 'error',
-                confimButtonText: 'OK'
-            })
-            return
-        }
+
+    if(descripcionEgresoAGuardar === "") {
+        Swal.fire({
+            title: 'Error!',
+            text: 'Debe ingresar una descripción',
+            icon: 'error',
+            confirmButtonText: 'OK'
+        })
+        return
+    }
+
+    if( isNaN(valorEgresoAGuardar) === true || valorEgresoAGuardar == null || valorEgresoAGuardar === "") { /*EVALUA SI LO INGRESADO ES UN NUMERO */
+        Swal.fire({
+            title: 'Error!',
+            text: 'Debe ingresar información válida. Debe ingresar un número!',
+            icon: 'error',
+            confimButtonText: 'OK'
+        })
+        return
+    }
 
     if (valorEgresoAGuardar <= 0) {
         Swal.fire({
