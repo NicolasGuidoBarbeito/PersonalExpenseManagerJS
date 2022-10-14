@@ -123,7 +123,6 @@ function ingresarIngreso(botonID) {
 
     let valorIngresoAGuardar = document.getElementById(valorIngresoID).value;
 
-
     if(fechaIngresoAGuardar === "") {
         Swal.fire({
             title: 'Error!',
@@ -185,6 +184,12 @@ function ingresarIngreso(botonID) {
         text: "Ingreso agregado correctamente!",
         duration: 3000
     }).showToast();
+
+    document.getElementById(fechaIngresoID).disabled = true;
+
+    document.getElementById(descripcionIngresoID).disabled = true;
+
+    document.getElementById(valorIngresoID).disabled = true;
 
     sumarOperaciones();
 }
@@ -307,6 +312,12 @@ function ingresarEgreso(botonID){
         text: "Egreso agregado correctamente!",
         duration: 3000
     }).showToast();
+
+    document.getElementById(fechaEgresoID).disabled = true;
+
+    document.getElementById(descripcionEgresoID).disabled = true;
+
+    document.getElementById(valorEgresoID).disabled = true;
 
     sumarOperaciones();
 }
